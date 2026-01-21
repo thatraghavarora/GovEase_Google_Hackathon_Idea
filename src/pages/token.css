@@ -1,0 +1,157 @@
+.token-page {
+  min-height: 100vh;
+  padding: 2.5rem 5vw 4rem;
+  background: #f2f5f9;
+  color: #102a43;
+}
+
+.token-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.token-header h1 {
+  font-size: clamp(2rem, 3vw, 2.4rem);
+}
+
+.token-header p {
+  color: #486581;
+}
+
+.token-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 2rem;
+}
+
+.token-form,
+.token-summary {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 2rem;
+  border: 1px solid rgba(16, 42, 67, 0.1);
+  box-shadow: 0 18px 40px rgba(15, 34, 56, 0.08);
+}
+
+.token-form h2 {
+  margin-bottom: 0.5rem;
+}
+
+.token-form .muted {
+  color: #486581;
+  margin-bottom: 1.5rem;
+}
+
+.token-form form {
+  display: grid;
+  gap: 1rem;
+}
+
+.token-form label {
+  display: grid;
+  gap: 0.5rem;
+  color: #486581;
+  font-size: 0.85rem;
+}
+
+.token-form input {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(16, 42, 67, 0.2);
+  background: #f6f8fb;
+  color: #102a43;
+}
+
+.token-form select {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(16, 42, 67, 0.2);
+  background: #f6f8fb;
+  color: #102a43;
+}
+
+.token-form .error {
+  color: #c45533;
+  margin-bottom: 0.8rem;
+}
+
+.token-summary {
+  display: grid;
+  gap: 1.5rem;
+  align-content: start;
+}
+
+.summary-card {
+  background: #f6f8fb;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(16, 42, 67, 0.08);
+}
+
+.summary-card.highlight {
+  border-color: rgba(10, 111, 134, 0.4);
+  box-shadow: 0 12px 32px rgba(10, 111, 134, 0.12);
+  background: linear-gradient(180deg, #f7fcfd 0%, #eef7fa 100%);
+}
+
+.token-number {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin: 1rem 0 0.6rem;
+  color: #0a6f86;
+  letter-spacing: 0.02em;
+}
+
+.summary-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed rgba(16, 42, 67, 0.12);
+  color: #486581;
+}
+
+.detail-row strong {
+  color: #102a43;
+  font-weight: 600;
+}
+
+.detail-note {
+  margin-top: 0.6rem;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(10, 111, 134, 0.2);
+  color: #0a6f86;
+  font-weight: 600;
+}
+
+@media (max-width: 960px) {
+  .token-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .token-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 520px) {
+  .token-form,
+  .token-summary {
+    padding: 1.4rem;
+  }
+
+  .summary-actions {
+    flex-direction: column;
+  }
+}
