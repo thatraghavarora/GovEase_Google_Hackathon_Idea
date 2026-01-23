@@ -47,7 +47,7 @@
 .auth-logo {
     position: relative;
     z-index: 1;
-    width: 150px;
+    width: 64px;
     height: 64px;
     margin: 26px auto 6px;
     display: block;
@@ -65,7 +65,7 @@
     text-align: center;
     font-size: 28px;
     font-weight: 600;
-    color: black;
+    color: #ffffff;
 }
 
 .subtitle {
@@ -182,7 +182,7 @@
     justify-content: center;
 }
 
-.google-button>div {
+.google-button > div {
     width: 100%;
     max-width: 320px;
 }

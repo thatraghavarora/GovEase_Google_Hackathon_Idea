@@ -44,7 +44,7 @@ const AdminLogin = () => {
             <input
               type="text"
               name="username"
-              placeholder="Username"
+              placeholder="Center ID"
               onChange={handleChange}
               required
             />

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getCenterById } from "../data/centers";
 import {
   approveToken,
   clearToken,
   createAdminQrs,
-  fetchCenter,
   fetchAdminTokens,
   fetchAdminQrs,
   rejectToken,
@@ -16,7 +16,7 @@ import "./admin.css";
 const Admin = () => {
   const navigate = useNavigate();
   const session = getSession();
-  const [center, setCenter] = useState(null);
+  const center = getCenterById(session?.centerId);
   const [tokens, setTokens] = useState([]);
   const [selectedToken, setSelectedToken] = useState(null);
   const [selectedDepartment, setSelectedDepartment] = useState("all");
@@ -62,10 +62,7 @@ const Admin = () => {
   );
 
   const availableDepartments = useMemo(() => {
-    if (center?.departments) {
-      return center.departments;
-    }
-    return Array.isArray(center?.services) ? center.services : [];
+    return center?.departments || [];
   }, [center]);
 
   const filteredTokens = useMemo(() => {
@@ -79,23 +76,6 @@ const Admin = () => {
   useEffect(() => {
     refreshTokens();
     refreshQrs();
-  }, [session?.centerId]);
-
-  useEffect(() => {
-    const loadCenter = async () => {
-      if (!session?.centerId) {
-        setCenter(null);
-        return;
-      }
-      try {
-        const response = await fetchCenter(session.centerId);
-        setCenter(response.data);
-      } catch (err) {
-        setCenter(null);
-      }
-    };
-
-    loadCenter();
   }, [session?.centerId]);
 
   const handleApprove = async (token) => {

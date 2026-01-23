@@ -1,19 +1,15 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import centers from "../data/centers";
 import { registerCenterAdmin } from "../services/auth";
 import "./register.css";
 
 const AdminRegister = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    username: "",
+    centerId: centers[0]?.id || "",
+    centerCode: "",
     password: "",
-    providerName: "",
-    description: "",
-    logo: "",
-    location: "",
-    category: "",
-    services: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,65 +42,24 @@ const AdminRegister = () => {
         {error && <p className="error">{error}</p>}
 
         <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            name="providerName"
-            placeholder="Service Provider Name"
-            value={form.providerName}
+          <select
+            name="centerId"
+            value={form.centerId}
             onChange={handleChange}
             required
-          />
-
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={form.description}
-            onChange={handleChange}
-            required
-            rows={3}
-          />
+          >
+            {centers.map((center) => (
+              <option key={center.id} value={center.id}>
+                {center.name} ({center.id})
+              </option>
+            ))}
+          </select>
 
           <input
             type="text"
-            name="logo"
-            placeholder="Logo URL"
-            value={form.logo}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="text"
-            name="category"
-            placeholder="Category (office, company, healthcare, etc.)"
-            value={form.category}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="text"
-            name="services"
-            placeholder="Services (comma separated)"
-            value={form.services}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="text"
-            name="location"
-            placeholder="Location / City"
-            value={form.location}
-            onChange={handleChange}
-            required
-          />
-
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={form.username}
+            name="centerCode"
+            placeholder="Center Code (e.g. JPR-RTO-101)"
+            value={form.centerCode}
             onChange={handleChange}
             required
           />

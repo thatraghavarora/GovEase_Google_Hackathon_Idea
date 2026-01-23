@@ -44,7 +44,7 @@
 .auth-logo {
     position: relative;
     z-index: 1;
-    width: 150px;
+    width: 64px;
     height: 64px;
     margin: 0 auto 12px;
     display: block;
@@ -93,8 +93,7 @@
 
 /* ===== INPUT ===== */
 .auth-page form input,
-.auth-page form select,
-.auth-page form textarea {
+.auth-page form select {
     height: 46px;
     padding: 0 14px;
     border-radius: 12px;
@@ -106,16 +105,9 @@
 }
 
 .auth-page form input:focus,
-.auth-page form select:focus,
-.auth-page form textarea:focus {
+.auth-page form select:focus {
     border-color: #16b5d8;
     box-shadow: 0 0 0 3px rgba(22, 181, 216, 0.15);
-}
-
-.auth-page form textarea {
-    min-height: 90px;
-    padding: 10px 14px;
-    resize: vertical;
 }
 
 /* ===== BUTTON ===== */
@@ -166,7 +158,7 @@
     justify-content: center;
 }
 
-.google-button>div {
+.google-button > div {
     width: 100%;
     max-width: 320px;
 }

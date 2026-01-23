@@ -118,9 +118,9 @@ export const loginCenterAdmin = async ({ username, password }) => {
   }
 };
 
-export const registerCenterAdmin = async (payload) => {
+export const registerCenterAdmin = async ({ centerId, centerCode, password }) => {
   try {
-    const response = await registerAdmin(payload);
+    const response = await registerAdmin({ centerId, centerCode, password });
     return response.data;
   } catch (error) {
     const message =

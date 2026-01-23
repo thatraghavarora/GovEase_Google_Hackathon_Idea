@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { createToken, fetchCenter, fetchQrStatus, fetchTokens } from "../services/api";
+import { getCenterById } from "../data/centers";
+import { createToken, fetchQrStatus, fetchTokens } from "../services/api";
 import { getSession } from "../services/auth";
 import "./token.css";
 
@@ -8,21 +9,34 @@ const Token = () => {
   const { centerId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const center = getCenterById(centerId);
   const session = getSession();
-  const [center, setCenter] = useState(null);
-  const [centerLoading, setCenterLoading] = useState(true);
 
   const [form, setForm] = useState({
     name: "",
     phone: "",
     purpose: "",
-    department: "",
+    department: center?.departments?.[0] || "",
   });
   const [created, setCreated] = useState(null);
   const [error, setError] = useState("");
   const [deptPending, setDeptPending] = useState(0);
   const [qrStatus, setQrStatus] = useState(null);
   const isQrInactive = qrStatus && !qrStatus.active;
+
+  if (!center) {
+    return (
+      <div className="token-page">
+        <div className="token-card">
+          <h2>Center not found</h2>
+          <button className="primary" onClick={() => navigate("/home")}
+          >
+            Back to Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
@@ -34,9 +48,6 @@ const Token = () => {
   };
 
   const loadCounts = async (department) => {
-    if (!center) {
-      return;
-    }
     try {
       const response = await fetchTokens({
         centerId: center.id,
@@ -53,42 +64,10 @@ const Token = () => {
   };
 
   useEffect(() => {
-    const loadCenter = async () => {
-      setCenterLoading(true);
-      try {
-        const response = await fetchCenter(centerId);
-        setCenter(response.data);
-      } catch (err) {
-        setCenter(null);
-      } finally {
-        setCenterLoading(false);
-      }
-    };
-
-    loadCenter();
-  }, [centerId]);
-
-  useEffect(() => {
-    if (!center) {
-      return;
-    }
-    setForm((prev) => ({
-      ...prev,
-      department: center.departments?.[0] || "General",
-    }));
-  }, [center]);
-
-  useEffect(() => {
-    if (!center) {
-      return;
-    }
     loadCounts(form.department);
-  }, [center, form.department]);
+  }, [center.id, form.department]);
 
   useEffect(() => {
-    if (!center) {
-      return;
-    }
     const params = new URLSearchParams(location.search);
     const qrCode = params.get("qr");
     if (!qrCode) {
@@ -114,7 +93,7 @@ const Token = () => {
     };
 
     validateQr();
-  }, [center?.id, location.search]);
+  }, [center.id, location.search]);
 
   const handleCreateToken = async () => {
     setError("");
@@ -144,30 +123,6 @@ const Token = () => {
       setError(err.response?.data?.message || err.message || "Token failed");
     }
   };
-
-  if (!center && centerLoading) {
-    return (
-      <div className="token-page">
-        <div className="token-card">
-          <h2>Loading center...</h2>
-        </div>
-      </div>
-    );
-  }
-
-  if (!center) {
-    return (
-      <div className="token-page">
-        <div className="token-card">
-          <h2>Center not found</h2>
-          <button className="primary" onClick={() => navigate("/home")}
-          >
-            Back to Home
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="token-page">

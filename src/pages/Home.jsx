@@ -1,7 +1,8 @@
 import { useMemo, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import centers from "../data/centers";
 import services from "../data/services.json";
-import { fetchCenters, fetchTokens } from "../services/api";
+import { fetchTokens } from "../services/api";
 import { getSession, logoutLocalUser } from "../services/auth";
 import logo from "../assets/logo.png";
 import BottomNav from "../components/BottomNav";
@@ -19,17 +20,9 @@ const Home = () => {
   const [currentCity, setCurrentCity] = useState("All");
   const [pendingTokens, setPendingTokens] = useState([]);
   const [myTokens, setMyTokens] = useState([]);
-  const [centers, setCenters] = useState([]);
 
   useEffect(() => {
     const load = async () => {
-      try {
-        const centersResponse = await fetchCenters();
-        setCenters(centersResponse.data || []);
-      } catch (error) {
-        setCenters([]);
-      }
-
       try {
         const pendingResponse = await fetchTokens({ status: "pending" });
         setPendingTokens(pendingResponse.data);
@@ -59,21 +52,19 @@ const Home = () => {
         : services.find((service) => service.id === selectedService);
 
     return centers.filter((center) => {
-      const locationValue = center.location || "Other";
-      const cityValue = center.city || "Other";
       const matchesType = activeService
         ? center.type === activeService.categoryType
         : true;
       const matchesLocation =
-        locationFilter === "All" || locationValue === locationFilter;
+        locationFilter === "All" || center.location === locationFilter;
       const matchesCity =
-        currentCity === "All" || cityValue === currentCity;
-      const matchesSearch = `${center.name} ${center.code} ${locationValue}`
+        currentCity === "All" || center.city === currentCity;
+      const matchesSearch = `${center.name} ${center.code} ${center.location}`
         .toLowerCase()
         .includes(search.toLowerCase());
       return matchesType && matchesLocation && matchesCity && matchesSearch;
     });
-  }, [centers, search, selectedService, locationFilter, currentCity]);
+  }, [search, selectedService, locationFilter, currentCity]);
 
   const totalPending = useMemo(() => {
     return pendingTokens.length;
@@ -87,18 +78,14 @@ const Home = () => {
   }, [pendingTokens]);
 
   const locations = useMemo(() => {
-    const unique = Array.from(
-      new Set(centers.map((center) => center.location || "Other"))
-    );
+    const unique = Array.from(new Set(centers.map((center) => center.location)));
     return ["All", ...unique];
-  }, [centers]);
+  }, []);
 
   const cities = useMemo(() => {
-    const unique = Array.from(
-      new Set(centers.map((center) => center.city || "Other"))
-    );
+    const unique = Array.from(new Set(centers.map((center) => center.city)));
     return ["All", ...unique];
-  }, [centers]);
+  }, []);
 
   const requestLocation = () => {
     if (!navigator.geolocation) {
@@ -268,60 +255,37 @@ const Home = () => {
             <button className="ghost">See all</button>
           </div>
           <div className="centers-grid">
-            {filteredCenters.map((center) => {
-              const centerServices = Array.isArray(center.services)
-                ? center.services
-                : [];
-              return (
-                <article key={center.id} className="center-card">
-                  <div className="center-head">
-                    <div>
-                      <span className="badge">{center.type}</span>
-                      <h3>{center.name}</h3>
-                      <p>{center.location}</p>
-                      {center.description && (
-                        <p className="center-description">{center.description}</p>
-                      )}
-                    </div>
-                    <div className="center-aside">
-                      {center.logo && (
-                        <img
-                          className="center-logo"
-                          src={center.logo}
-                          alt={`${center.name} logo`}
-                          loading="lazy"
-                        />
-                      )}
-                      <div className="code-block">
-                        <span>Center code</span>
-                        <strong>{center.code}</strong>
-                      </div>
-                    </div>
+            {filteredCenters.map((center) => (
+              <article key={center.id} className="center-card">
+                <div className="center-head">
+                  <div>
+                    <span className="badge">{center.type}</span>
+                    <h3>{center.name}</h3>
+                    <p>{center.location}</p>
                   </div>
-                  <div className="center-meta">
-                    <div>
-                      <span>Pending tokens</span>
-                      <strong>{queueMap[center.id] || 0}</strong>
-                    </div>
-                    <div>
-                      <span>Service line</span>
-                      <strong>{centerServices[0] || "General"}</strong>
-                    </div>
+                  <div className="code-block">
+                    <span>Center code</span>
+                    <strong>{center.code}</strong>
                   </div>
-                  {centerServices.length > 0 && (
-                    <div className="center-services">
-                      Services: {centerServices.join(", ")}
-                    </div>
-                  )}
-                  <button
-                    className="primary"
-                    onClick={() => navigate(`/token/${center.id}`)}
-                  >
-                    Generate Token
-                  </button>
-                </article>
-              );
-            })}
+                </div>
+                <div className="center-meta">
+                  <div>
+                    <span>Pending tokens</span>
+                    <strong>{queueMap[center.id] || 0}</strong>
+                  </div>
+                  <div>
+                    <span>Service line</span>
+                    <strong>{center.type === "Hospital" ? "OPD" : "RTO"}</strong>
+                  </div>
+                </div>
+                <button
+                  className="primary"
+                  onClick={() => navigate(`/token/${center.id}`)}
+                >
+                  Generate Token
+                </button>
+              </article>
+            ))}
           </div>
         </section>
 

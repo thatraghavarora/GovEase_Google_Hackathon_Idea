@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import Preloader from "./components/Preloader";
-import ErrorBoundary from "./components/ErrorBoundary";
 import Login from "./pages/login";
 import Register from "./pages/register";
 import AdminLogin from "./pages/AdminLogin";
@@ -43,74 +42,72 @@ function App() {
   return (
     <>
       {loading && <Preloader />}
-      <ErrorBoundary onError={(error) => console.error(error)}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/register" element={<AdminRegister />} />
-            <Route
-              path="/home"
-              element={
-                <RequireAuth>
-                  <Home />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/appointments"
-              element={
-                <RequireAuth>
-                  <Appointments />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/scan"
-              element={
-                <RequireAuth>
-                  <Scan />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/tickets"
-              element={
-                <RequireAuth>
-                  <Tickets />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <RequireAuth>
-                  <Profile />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/token/:centerId"
-              element={
-                <RequireAuth>
-                  <Token />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <RequireAuth role="admin">
-                  <Admin />
-                </RequireAuth>
-              }
-            />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </ErrorBoundary>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/register" element={<AdminRegister />} />
+          <Route
+            path="/home"
+            element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/appointments"
+            element={
+              <RequireAuth>
+                <Appointments />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/scan"
+            element={
+              <RequireAuth>
+                <Scan />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/tickets"
+            element={
+              <RequireAuth>
+                <Tickets />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <Profile />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/token/:centerId"
+            element={
+              <RequireAuth>
+                <Token />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <RequireAuth role="admin">
+                <Admin />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
